@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include header %>
+</head>
+<body>
+
+  <section class="is-fullheight">
+    <div>
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-grey">Sign Up</h3>
+          <p class="subtitle has-text-grey">アカウントを登録してください</p>
+          <div class="box">
+            <form>
+              <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input class="input" type="email" placeholder="Email" id="signInEmail">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fas fa-check"></i>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control has-icons-left">
+                  <input class="input" type="password" placeholder="Password" id="signInPassword">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </p>
+              </div>
+              <a class="button is-block is-info is-large" id="signUp">登録します</a>
+            </form>
+          </div>
+          <p class="has-text-grey">
+            <a href="javascript:void(0)" id="signIn">アカウントを持っていました</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    window.onload = function() {
+      var signIn = document.getElementById('signIn');
+      signIn.addEventListener("click", function(){
+        location = "/";
+      }, false);
+
+      var signUpBtn = document.getElementById('signUp');
+      signUpBtn.addEventListener("click", function(){
+        var email = document.getElementById('signInEmail').value;
+        var password = document.getElementById('signInPassword').value;
+        signUp(email, password);
+      }, false);
+    }
+    function signUp(email, password) {
+      var attributeList = [];
+      var dataEmail = {
+          Name: 'email',
+          Value: email
+      };
+      attributeList.push(new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail));
+
+      USER_POOL.signUp(email, password, attributeList, null, function(err, result){
+          if (err) {
+              alert(err);
+              return;
+          }
+          location = "/confirm/" + email + "";
+      });
+    }
+  </script>
+
+</body>
+</html>
