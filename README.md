@@ -25,10 +25,14 @@ $ npm install
 ```
 $ cp conf/config.sample.json conf/config.dev.json
 ```
-作成したJSONを修正します
+
+`conf/config.dev.json`を修正します
+
 - `REGION`: リージョンを指定します
 - `USER_POOL_ID`: [プールID](docs/cognitoの設定.md#プールid)を指定します
-- `アプリクライアントID`: [アプリクライアントID](docs/cognitoの設定.md#アプリクライアントid)を指定します
+- `USER_POOL_ARN`: [プールARN](docs/cognitoの設定.md#プールid)を指定します
+- `CLIENT_ID`: [アプリクライアントID](docs/cognitoの設定.md#アプリクライアントid)を指定します
+- `IDENTITY_POOL_ID`: [フェデレーティッドアイデンティティID](docs/cognitoの設定.md#フェデレーティッドアイデンティティid)を指定します
 
 ### 4. ローカルで実行
 ```
