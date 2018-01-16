@@ -26,6 +26,7 @@ provider:
     REGION: ${file(./conf/config.${self:provider.stage}.json):REGION}
     USER_POOL_ID: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ID}
     CLIENT_ID: ${file(./conf/config.${self:provider.stage}.json):CLIENT_ID}
+    IDENTITY_POOL_ID: ${file(./conf/config.${self:provider.stage}.json):IDENTITY_POOL_ID}
 
 # you can overwrite defaults here
 #  stage: dev

@@ -1,5 +1,7 @@
 {
   "REGION": "your-app-region",
   "USER_POOL_ID": "your-user-pool-id",
-  "CLIENT_ID": "your-client-id"
+  "USER_POOL_ARN": "your-user-pool-arn",
+  "CLIENT_ID": "your-client-id",
+  "IDENTITY_POOL_ID": "your-identity-pool-id"
 }

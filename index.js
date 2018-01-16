@@ -9,7 +9,8 @@ app.engine('ejs',ejs.renderFile)
 const environments = {
   "REGION": process.env.REGION,
   "USER_POOL_ID": process.env.USER_POOL_ID,
-  "CLIENT_ID": process.env.CLIENT_ID
+  "CLIENT_ID": process.env.CLIENT_ID,
+  "IDENTITY_POOL_ID": process.env.IDENTITY_POOL_ID
 }
 
 app.get('/', function (req, res) {

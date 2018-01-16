@@ -15,7 +15,7 @@
             <form>
               <div class="field">
                 <p class="control has-icons-left has-icons-right">
-                  <input class="input" type="email" placeholder="Email">
+                  <input class="input" type="email" placeholder="Email" id="userId">
                   <span class="icon is-small is-left">
                     <i class="fas fa-envelope"></i>
                   </span>
@@ -26,7 +26,7 @@
               </div>
               <div class="field">
                 <p class="control has-icons-left">
-                  <input class="input" type="password" placeholder="Password">
+                  <input class="input" type="password" placeholder="Password"  id="password">
                   <span class="icon is-small is-left">
                     <i class="fas fa-lock"></i>
                   </span>
@@ -38,12 +38,12 @@
                   Remember me
                 </label>
               </div>
-              <a class="button is-block is-info is-large">Login</a>
+              <a class="button is-block is-info is-large" id="signIn">Login</a>
             </form>
           </div>
           <p class="has-text-grey">
-            <a href="javascript:void(0)" id="signUp">Sign Up</a> &nbsp;·&nbsp;
-            <a href="javascript:void(0)">Forgot Password</a>
+            <a id="signUp">Sign Up</a> &nbsp;·&nbsp;
+            <a >Forgot Password</a>
           </p>
         </div>
       </div>
@@ -56,6 +56,35 @@
       signUp.addEventListener("click", function(){
         location = "/sign-up";
       }, false);
+
+      var signInBtn = document.getElementById('signIn');
+      signInBtn.addEventListener("click", function(){
+        var userId = document.getElementById('userId').value;
+        var password = document.getElementById('password').value;
+        signIn(userId, password);
+      }, false);
+    }
+
+    function signIn(userId, password) {
+      var authenticationData = {
+        Username : userId,
+        Password : password
+      };
+      var authenticationDetails = new AWSCognito.CognitoIdentityServiceProvider.AuthenticationDetails(authenticationData);
+      var userData = {
+        Username : userId,
+        Pool : USER_POOL
+      };
+
+      var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: function (result) {
+          location = "/top";
+        },
+        onFailure: function(err) {
+          alert(err);
+        },
+      });
     }
   </script>
 </body>
