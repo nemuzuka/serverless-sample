@@ -34,7 +34,7 @@
               </div>
               <div class="field">
                 <label class="checkbox">
-                  <input type="checkbox">
+                  <input type="checkbox" id="remember">
                   Remember me
                 </label>
               </div>
@@ -52,6 +52,7 @@
 
   <script>
     window.onload = function() {
+      init();
       var signUp = document.getElementById('signUp');
       signUp.addEventListener("click", function(){
         moveUrl("/sign-up");
@@ -79,6 +80,7 @@
       var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
+          saveLocalStorage(userId, password);
           localStorage["LoginedUserId"] = userId;
           moveUrl("/top");
         },
@@ -87,6 +89,34 @@
         },
       });
     }
+
+    function init() {
+      var settingEmail = localStorage["SettingUserId"];
+      var settingPassword = localStorage["SettingPassword"];
+      var settingRemember = localStorage["SettingRemember"];
+      if(typeof settingEmail !== 'undefined' && typeof settingPassword !== 'undefined'
+          && typeof settingRemember !== 'undefined') {
+        document.getElementById('userId').value = settingEmail;
+        document.getElementById('password').value = settingPassword;
+        document.getElementById('remember').checked = JSON.parse(settingRemember);
+      }
+    }
+
+    function saveLocalStorage(userId, password) {
+      var settingEmail = "";
+      var settingPassword = "";
+      var settingRemember = "false";
+
+      if(document.getElementById('remember').checked === true) {
+        settingEmail = userId;
+        settingPassword = password;
+        settingRemember = "true";
+      }
+      localStorage["SettingUserId"] = settingEmail;
+      localStorage["SettingPassword"] = settingPassword;
+      localStorage["SettingRemember"] = settingRemember;
+    }
+
   </script>
 </body>
 </html>

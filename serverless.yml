@@ -68,19 +68,9 @@ functions:
   app:
     handler: index.handler
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
-  top:
-    handler: index.handler
-    events:
+      - http: 'GET /'
       - http: 'GET /top'
-  sign-up:
-    handler: index.handler
-    events:
       - http: 'GET /sign-up'
-  confirm:
-    handler: index.handler
-    events:
       - http: 'GET /confirm/{proxy+}'
 
 plugins:
