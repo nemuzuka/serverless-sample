@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include header %>
+</head>
+<body>
+  <section class="is-fullheight">
+    <div>
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-grey">検証コード確認</h3>
+          <p class="subtitle has-text-grey">メールに送信された検証コードを入力してください</p>
+          <div class="box">
+            <form>
+              <div class="field">
+                <p class="control">
+                  <input class="input" type="text" placeholder="検証コード" id="comfirmCode">
+                </p>
+              </div>
+              <a class="button is-block is-info is-large" id="comfirm">検証コード確認</a>
+            </form>
+          </div>
+          <p class="has-text-grey">
+            <a id="signIn">アカウントを持っていました</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <input type="hidden" value="<%= email %>" id="confirmEmail">
+
+  <script>
+    window.onload = function() {
+      var signIn = document.getElementById('signIn');
+      signIn.addEventListener("click", function(){
+        moveUrl("/");
+      }, false);
+
+      var comfirmBtn = document.getElementById('comfirm');
+      comfirmBtn.addEventListener("click", function(){
+        var confirmEmail = document.getElementById('confirmEmail').value;
+        var comfirmCode = document.getElementById('comfirmCode').value;
+        comfirm(confirmEmail, comfirmCode);
+      }, false);
+    }
+    function comfirm(email, confirmationCode) {
+      var userData = {
+        Username: email,
+        Pool: USER_POOL
+      };
+
+      var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+      cognitoUser.confirmRegistration(confirmationCode, true, function (err, result) {
+        if (err) {
+            alert(err);
+            return;
+        }
+        alert("検証コードの確認ができました。ログインできます");
+        moveUrl("/");
+      });
+    }
+  </script>
+
+</body>
+</html>

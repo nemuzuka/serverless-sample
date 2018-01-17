@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include header %>
+</head>
+<body>
+
+<div style="display:none;" id="mainContent">
+
+  <section class="is-fullheight">
+    <div class="container has-text-centered">
+      <div class="column is-10 is-offset-1">
+        <nav class="level">
+          <div class="level-left">
+          </div>
+          <div class="level-right">
+            <a class="button is-warning is-rounded" id="signOut">
+              <span class="icon">
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+              <span>SignOut</span>
+            </a>
+          </div>
+        </nav>
+        <h3 class="title">連携サービス</h3>
+        <table class="table is-bordered is-fullwidth">
+          <thead>
+            <tr>
+              <th>サービス</th>
+              <th>Data</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Slack</td>
+              <td>
+                <textarea class="textarea" placeholder="個別の設定情報。JSON形式で設定してください" id="slackSettings"></textarea>
+                <small>設定サンプル</small>
+                <pre style="padding : 0rem;"><code>{
+  "SLACK_URL": "https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXX",
+  "SLACK_MESSAGE": "お疲れ様です。山田です。\\n体調不良の為、今日はお休みします...。"
+}</code></pre>
+              </td>
+              <td width="100px;">
+                <a class="button is-info" id="saveSlackSettings">
+                  <span class="icon">
+                    <i class="far fa-save"></i>
+                  </span>
+                  <span>保存</span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  var DATA_SET = null;
+
+  window.onload = function() {
+    validLogin(function(session){
+      AWS.config.credentials.get(function(){
+        var syncClient = new AWS.CognitoSyncManager();
+        syncClient.openOrCreateDataset('SETTINGS', function(err, dataset) {
+          if (err) { alert(err); return; }
+          dataset.synchronize({
+            onSuccess: function(dataset, newRecords) {
+              DATA_SET = dataset;
+              viewContent();
+            }
+          });
+        });
+      });
+
+      document.getElementById('signOut').addEventListener("click", function(){
+        signOut();
+      }, false);
+
+      var saveSlackSettingsBtn = document.getElementById('saveSlackSettings');
+      saveSlackSettingsBtn.addEventListener("click", function(){
+        saveSlackSettings();
+      }, false);
+
+      var mainContent = document.getElementById('mainContent');
+      mainContent.style = "inline";
+    });
+  }
+
+  function viewContent() {
+    getValue(DATA_SET, "SLACK_SETTINGS", function(value){
+      viewSlackContent(value);
+    });
+  }
+
+  function viewSlackContent(value) {
+    var jsonObject = JSON.parse(value);
+    var jsonString = JSON.stringify(jsonObject, null, "  ");
+    document.getElementById('slackSettings').value = jsonString;
+  }
+
+  function saveSlackSettings() {
+    var slackSettings = document.getElementById('slackSettings').value;
+    if(slackSettings === ''){alert("値を入力してください");return;}
+
+    var jsonObject = null;
+    try {
+      jsonObject = JSON.parse(slackSettings);
+    } catch(error) {
+      alert("不正な入力です");
+      return;
+    }
+    if(typeof(jsonObject) !== 'object') {alert("不正な入力です");return;}
+
+    //strageに保存
+    putValue(DATA_SET, "SLACK_SETTINGS", slackSettings, function(){
+      alert("登録しました");
+      viewContent();
+    });
+
+  }
+
+</script>
+
+</body>
+</html>

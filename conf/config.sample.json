@@ -1,0 +1,8 @@
+{
+  "REGION": "your-app-region",
+  "USER_POOL_ID": "your-user-pool-id",
+  "USER_POOL_ARN": "your-user-pool-arn",
+  "CLIENT_ID": "your-client-id",
+  "IDENTITY_POOL_ID": "your-identity-pool-id",
+  "ONLY_API_GATEWAY": Amazon API Gatewayを直接使用する場合、 true  / Amazon CloudFront を組み合わせて使用する場合、 false
+}
