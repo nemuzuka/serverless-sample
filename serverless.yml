@@ -20,6 +20,8 @@ service: serverless-sample
 provider:
   name: aws
   runtime: nodejs6.10
+  memorySize: 128
+  timeout: 10
   stage: ${opt:stage, 'dev'}
   region: ${file(./conf/config.${self:provider.stage}.json):REGION}
   environment:
@@ -27,6 +29,7 @@ provider:
     USER_POOL_ID: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ID}
     CLIENT_ID: ${file(./conf/config.${self:provider.stage}.json):CLIENT_ID}
     IDENTITY_POOL_ID: ${file(./conf/config.${self:provider.stage}.json):IDENTITY_POOL_ID}
+    ONLY_API_GATEWAY: ${file(./conf/config.${self:provider.stage}.json):ONLY_API_GATEWAY}
 
 # you can overwrite defaults here
 #  stage: dev

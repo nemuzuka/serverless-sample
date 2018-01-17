@@ -34,7 +34,7 @@
     window.onload = function() {
       var signIn = document.getElementById('signIn');
       signIn.addEventListener("click", function(){
-        location = "/";
+        moveUrl("/");
       }, false);
 
       var comfirmBtn = document.getElementById('comfirm');
@@ -57,7 +57,7 @@
             return;
         }
         alert("検証コードの確認ができました。ログインできます");
-        location = "/";
+        moveUrl("/");
       });
     }
   </script>

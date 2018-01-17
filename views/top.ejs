@@ -10,6 +10,18 @@
   <section class="is-fullheight">
     <div class="container has-text-centered">
       <div class="column is-10 is-offset-1">
+        <nav class="level">
+          <div class="level-left">
+          </div>
+          <div class="level-right">
+            <a class="button is-warning is-rounded" id="signOut">
+              <span class="icon">
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+              <span>SignOut</span>
+            </a>
+          </div>
+        </nav>
         <h3 class="title">連携サービス</h3>
         <table class="table is-bordered is-fullwidth">
           <thead>
@@ -32,11 +44,11 @@
               </td>
               <td width="100px;">
                 <a class="button is-info" id="saveSlackSettings">
-                    <span class="icon">
-                      <i class="far fa-save"></i>
-                    </span>
-                    <span>保存</span>
-                  </a>
+                  <span class="icon">
+                    <i class="far fa-save"></i>
+                  </span>
+                  <span>保存</span>
+                </a>
               </td>
             </tr>
           </tbody>
@@ -64,6 +76,10 @@
           });
         });
       });
+
+      document.getElementById('signOut').addEventListener("click", function(){
+        signOut();
+      }, false);
 
       var saveSlackSettingsBtn = document.getElementById('saveSlackSettings');
       saveSlackSettingsBtn.addEventListener("click", function(){

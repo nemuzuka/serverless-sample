@@ -20,6 +20,7 @@ var POOL_DATA = {
     ClientId : '<%= CLIENT_ID %>'
 };
 var USER_POOL = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(POOL_DATA);
+var CONTEXT_PATH = '<%= CONTEXT_PATH %>';
 
 /**
  * ログイン済みかチェックする.
@@ -38,8 +39,10 @@ function validLogin(callBack) {
       return moveToLogin();
     }
 
+    const loginId = localStorage["LoginedUserId"];
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: '<%= IDENTITY_POOL_ID %>',
+      LoginId: (loginId) ? loginId : undefined,
       Logins: {
         'cognito-idp.<%= REGION %>.amazonaws.com/<%= USER_POOL_ID %>': session.getIdToken().getJwtToken()
       }
@@ -49,11 +52,22 @@ function validLogin(callBack) {
 }
 
 /**
+ * サインアウト.
+ */
+function signOut() {
+  var cognitoUser = USER_POOL.getCurrentUser();
+  if(cognitoUser != null) {
+    cognitoUser.signOut();
+  }
+  moveUrl("/");
+}
+
+/**
  * ログイン画面遷移
  */
 function moveToLogin() {
   alert("お手数ですがログインしてください");
-  location = "/";
+  moveUrl("/");
 }
 
 /**
@@ -81,5 +95,8 @@ function putValue(dataset, key, value, callBack) {
   });
 }
 
+function moveUrl(url) {
+  location = CONTEXT_PATH + url;
+}
 
 </script>

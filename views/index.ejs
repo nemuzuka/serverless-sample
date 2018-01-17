@@ -54,7 +54,7 @@
     window.onload = function() {
       var signUp = document.getElementById('signUp');
       signUp.addEventListener("click", function(){
-        location = "/sign-up";
+        moveUrl("/sign-up");
       }, false);
 
       var signInBtn = document.getElementById('signIn');
@@ -79,7 +79,8 @@
       var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
-          location = "/top";
+          localStorage["LoginedUserId"] = userId;
+          moveUrl("/top");
         },
         onFailure: function(err) {
           alert(err);
