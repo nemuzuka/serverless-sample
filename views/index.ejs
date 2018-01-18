@@ -81,7 +81,6 @@
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
           saveLocalStorage(userId, password);
-          localStorage["LoginedUserId"] = userId;
           moveUrl("/top");
         },
         onFailure: function(err) {

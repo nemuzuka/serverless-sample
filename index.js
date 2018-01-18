@@ -10,7 +10,6 @@ const environments = {
   "REGION": process.env.REGION,
   "USER_POOL_ID": process.env.USER_POOL_ID,
   "CLIENT_ID": process.env.CLIENT_ID,
-  "IDENTITY_POOL_ID": process.env.IDENTITY_POOL_ID,
   "CONTEXT_PATH": ""
 }
 
@@ -34,7 +33,7 @@ app.get('/confirm/:email', function (req, res) {
 
 
 module.exports.handler = serverless(app, {
-  request: function(request, event, context) {
+  request: (request, event, context) => {
     if(JSON.parse(process.env.ONLY_API_GATEWAY) === true) {
       const stage = event.requestContext.stage;
       const path = event.requestContext.path;

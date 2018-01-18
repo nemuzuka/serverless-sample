@@ -51,16 +51,3 @@ Webブラウザから呼び出すので、`クライアントシークレット�
 
 ### アプリクライアントID
 ![12](https://user-images.githubusercontent.com/1412761/34933638-ee417f70-fa1a-11e7-988b-8c24e3ba22c5.png)
-
-## 3. フェデレーティッドアイデンティティを作成
-### IDプール
-認証プロバイダーに`Cognito`を選択し、ユーザープールIDとアプリクライアントIDを設定します
-![13](https://user-images.githubusercontent.com/1412761/34933642-f349132a-fa1a-11e7-8995-df145ba5b9a8.png)
-
-### IAMロールの作成
-`許可`ボタンをクリックすることでフェデレーティッドアイデンティティが作成されます
-![14](https://user-images.githubusercontent.com/1412761/34933647-f8a73310-fa1a-11e7-9581-f5fce973bc8c.png)
-
-### フェデレーティッドアイデンティティID
-IDプール - ダッシュボード の右上にある `IDプールの編集` リンクから確認できます
-![15](https://user-images.githubusercontent.com/1412761/34969680-55a4cdfa-fab3-11e7-9a2a-65ca48167f70.png)

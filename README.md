@@ -19,6 +19,7 @@ Serverless FrameworkでCognitoを使ってユーザ管理するサンプル
 ```
 $ npm install -g serverless
 $ npm install
+$ sls dynamodb install
 ```
 
 ### 3. 環境変数を設定
@@ -32,14 +33,14 @@ $ cp conf/config.sample.json conf/config.dev.json
 - `USER_POOL_ID`: [プールID](docs/cognitoの設定.md#プールid)を指定します
 - `USER_POOL_ARN`: [プールARN](docs/cognitoの設定.md#プールid)を指定します
 - `CLIENT_ID`: [アプリクライアントID](docs/cognitoの設定.md#アプリクライアントid)を指定します
-- `IDENTITY_POOL_ID`: [フェデレーティッドアイデンティティID](docs/cognitoの設定.md#フェデレーティッドアイデンティティid)を指定します
 - `ONLY_API_GATEWAY`: Amazon API Gatewayを直接使用する場合、`true` / Amazon CloudFront を組み合わせて使用する場合、`false` を指定します
 
 ### 4. ローカルで実行
 ```
 $ sls offline start
 ```
-http://localhost:3000/ で参照できます
+http://localhost:3000/ で参照できます(http://localhost:8000/shell/ にアクセスするとローカルのDynamoDBにアクセスできます)
+
 
 ### 5. デプロイ
 ```
