@@ -60,21 +60,18 @@
 </div>
 
 <script>
-  var DATA_SET = null;
+  var AXIOS_BASE = null;
 
   window.onload = function() {
     validLogin(function(session){
-      AWS.config.credentials.get(function(){
-        var syncClient = new AWS.CognitoSyncManager();
-        syncClient.openOrCreateDataset('SETTINGS', function(err, dataset) {
-          if (err) { alert(err); return; }
-          dataset.synchronize({
-            onSuccess: function(dataset, newRecords) {
-              DATA_SET = dataset;
-              viewContent();
-            }
-          });
-        });
+
+      AXIOS_BASE = axios.create({
+        baseURL: getBaseURL(),
+        headers: {
+          'ContentType': 'application/json',
+          'Authorization': session.getIdToken().jwtToken
+        },
+        responseType: 'json'
       });
 
       document.getElementById('signOut').addEventListener("click", function(){
@@ -86,20 +83,30 @@
         saveSlackSettings();
       }, false);
 
+      viewContent();
+
       var mainContent = document.getElementById('mainContent');
       mainContent.style = "inline";
     });
   }
 
   function viewContent() {
-    getValue(DATA_SET, "SLACK_SETTINGS", function(value){
-      viewSlackContent(value);
-    });
+    AXIOS_BASE.get(CONTEXT_PATH + '/api/settings')
+      .then(function (response) {
+        viewSlackContent(response.data.value);
+      })
+      .catch(function (error) {
+        alert(error.response.data.msg);
+      });
   }
 
   function viewSlackContent(value) {
-    var jsonObject = JSON.parse(value);
-    var jsonString = JSON.stringify(jsonObject, null, "  ");
+
+    var jsonString = "";
+    if(value !== "") {
+      var jsonObject = JSON.parse(value);
+      jsonString = JSON.stringify(jsonObject, null, "  ");
+    }
     document.getElementById('slackSettings').value = jsonString;
   }
 
@@ -116,12 +123,14 @@
     }
     if(typeof(jsonObject) !== 'object') {alert("不正な入力です");return;}
 
-    //strageに保存
-    putValue(DATA_SET, "SLACK_SETTINGS", slackSettings, function(){
-      alert("登録しました");
-      viewContent();
-    });
-
+    var params = {'value': slackSettings};
+    AXIOS_BASE.post(CONTEXT_PATH + '/api/settings', params)
+      .then(function (response) {
+        alert("登録しました");
+      })
+      .catch(function (error) {
+        alert(error.response.data.msg);
+      });
   }
 
 </script>

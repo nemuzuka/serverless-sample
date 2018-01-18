@@ -12,9 +12,11 @@
   "dependencies": {
     "ejs": "^2.5.7",
     "express": "^4.16.2",
-    "serverless-http": "^1.5.2"
+    "serverless-http": "^1.5.2",
+    "sjcl": "^1.0.7"
   },
   "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.27",
     "serverless-offline": "^3.16.0"
   }
 }

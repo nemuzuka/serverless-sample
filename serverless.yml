@@ -24,12 +24,23 @@ provider:
   timeout: 10
   stage: ${opt:stage, 'dev'}
   region: ${file(./conf/config.${self:provider.stage}.json):REGION}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.stage}_settings"
   environment:
     REGION: ${file(./conf/config.${self:provider.stage}.json):REGION}
     USER_POOL_ID: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ID}
     CLIENT_ID: ${file(./conf/config.${self:provider.stage}.json):CLIENT_ID}
-    IDENTITY_POOL_ID: ${file(./conf/config.${self:provider.stage}.json):IDENTITY_POOL_ID}
     ONLY_API_GATEWAY: ${file(./conf/config.${self:provider.stage}.json):ONLY_API_GATEWAY}
+    STAGE: ${self:provider.stage}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -64,6 +75,15 @@ provider:
 #    - exclude-me.js
 #    - exclude-me-dir/**
 
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    migration:
+      dir: ./config/migrations
+
 functions:
   app:
     handler: index.handler
@@ -72,6 +92,41 @@ functions:
       - http: 'GET /top'
       - http: 'GET /sign-up'
       - http: 'GET /confirm/{proxy+}'
-
+  getSettings:
+    handler: api.get
+    events:
+      - http:
+          path: api/settings
+          method: get
+          authorizer:
+            arn: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ARN}
+  postSettings:
+    handler: api.post
+    events:
+      - http:
+          path: api/settings
+          method: post
+          authorizer:
+            arn: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ARN}
 plugins:
+  - serverless-dynamodb-local
   - serverless-offline
+
+resources:
+  Resources:
+    SettingsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Delete
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "${self:provider.stage}_settings"
