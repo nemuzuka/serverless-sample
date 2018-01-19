@@ -1,17 +1,15 @@
 'use strict';
 
-const sjcl = require('sjcl')
 const aws = require('aws-sdk')
 const dao = require('./dao.js')
+const tokenUtil = require('./token.js')
+const jwt = require('jsonwebtoken')
 
 module.exports.get = (event, context, callback) => {
 
-  initialize(event).then(
+  initialize(event, callback).then(
     (userId)=>{
       return dao.readOne(getDynamoClient(event), userId);
-    },
-    (error)=>{
-      callback(null, error);
     }
   ).then(
     (data)=>{
@@ -25,18 +23,19 @@ module.exports.get = (event, context, callback) => {
       console.log(error)
       callback(null, {statusCode: 400, body: JSON.stringify({'msg': 'error'})});
     }
+  ).catch(
+    (error) => {
+      console.log(error)
+    }
   );
 };
 
 module.exports.post = (event, context, callback) => {
 
   const param = JSON.parse(event.body);
-  initialize(event).then(
+  initialize(event, callback).then(
     (userId)=>{
       return dao.put(getDynamoClient(event), userId, param.value);
-    },
-    (error)=>{
-      callback(null, error);
     }
   ).then(
     (data)=>{
@@ -46,27 +45,31 @@ module.exports.post = (event, context, callback) => {
       console.log(error);
       callback(null, {statusCode: 400, body: JSON.stringify({'msg': "error"})});
     }
+  ).catch(
+    (error) => {
+      console.log(error)
+    }
   );
 };
 
-const initialize = (event) => {
+const initialize = (event, callback) => {
   return new Promise((resolve, reject) => {
     const token = event.headers.Authorization
-    if(typeof token === "undefined" || token == null) {
-      reject({
+    if(typeof token === "undefined" || token == null || tokenUtil.verify(token) === false) {
+      callback(null, {
         statusCode: 401,
         body: JSON.stringify({'msg': '認証してからアクセスしてください'})
       });
-      return;
+      reject("token error")
+    } else {
+      resolve(getUserId(token));
     }
-    resolve(getUserId(token));
   });
 }
 
 const getUserId = (token) => {
-  const payload = token.split(".")[1];
-  const json = JSON.parse(sjcl.codec.utf8String.fromBits(sjcl.codec.base64url.toBits(payload)));
-  return json.sub;
+  var decoded = jwt.decode(token, { complete: true });
+  return decoded.payload.sub;
 }
 
 const getDynamoClient = (event) => {
