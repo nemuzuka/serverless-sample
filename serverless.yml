@@ -98,16 +98,12 @@ functions:
       - http:
           path: api/settings
           method: get
-          authorizer:
-            arn: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ARN}
   postSettings:
     handler: api.post
     events:
       - http:
           path: api/settings
           method: post
-          authorizer:
-            arn: ${file(./conf/config.${self:provider.stage}.json):USER_POOL_ARN}
 plugins:
   - serverless-dynamodb-local
   - serverless-offline

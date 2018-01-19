@@ -31,9 +31,10 @@ $ cp conf/config.sample.json conf/config.dev.json
 
 - `REGION`: リージョンを指定します
 - `USER_POOL_ID`: [プールID](docs/cognitoの設定.md#プールid)を指定します
-- `USER_POOL_ARN`: [プールARN](docs/cognitoの設定.md#プールid)を指定します
 - `CLIENT_ID`: [アプリクライアントID](docs/cognitoの設定.md#アプリクライアントid)を指定します
 - `ONLY_API_GATEWAY`: Amazon API Gatewayを直接使用する場合、`true` / Amazon CloudFront を組み合わせて使用する場合、`false` を指定します
+
+https://cognito-idp.{`リージョン`}.amazonaws.com/{`プールID`}/.well-known/jwks.json にアクセスし、取得したJSONを`conf/jwks.json`として保存してください
 
 ### 4. ローカルで実行
 ```
