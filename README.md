@@ -2,6 +2,8 @@
 
 Serverless FrameworkでCognitoを使ってユーザ管理するサンプル
 
+(Alexaからユーザ個別の情報を取って来るシステムとして作成。Alexa側の処理は[こちら](https://github.com/nemuzuka/delicious-stick-takoyaki))
+
 ## 環境構築手順(とりあえず動かしたい人向け)
 
 ### 事前準備
